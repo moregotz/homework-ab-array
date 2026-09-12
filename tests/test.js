@@ -1,21 +1,32 @@
-import { Magician, Daemon } from '../src/players.js';
+import ArrayBufferConverter from '../src/index.js';
+import getBuffer from '../src/buffer.js';
 
-test('totalAttack1', () => {
-  const evilMagician = new Magician(100, 1, false);
-  expect(evilMagician.attack).toBeCloseTo(100);
-});
+test('converter1', () => {
+  const textString = 'some text';
+  const buffer = getBuffer(textString);
+  const converter = new ArrayBufferConverter();
+  converter.load(buffer);
+  const result = converter.toString();
+  expect(result).toEqual(textString);
+})
 
-test('totalAttack3', () => {
-  const goodMagician = new Magician(100, 3, false);
-  expect(goodMagician.attack).toBeCloseTo(80);
-});
+test('converter2', () => {
+  const object = {
+    'name': 'apple',
+    'type': 'fruit'
+  };
+  const buffer = getBuffer(object);
+  const converter = new ArrayBufferConverter();
+  converter.load(buffer);
+  const result = converter.toString();
+  expect(JSON.parse(result)).toEqual(object);
+})
 
-test('totalAttack2Stoned', () => {
-  const madDaemon = new Daemon(100, 2, true);
-  expect(madDaemon.attack).toBeCloseTo(85);
-});
-
-test('totalAttack5Stoned', () => {
-  const kindDaemon = new Daemon(100, 5, true);
-  expect(kindDaemon.attack).toBeCloseTo(48, 0);
-});
+test('converter3', () => {
+  const array = [1, 2, 3];
+  const buffer = getBuffer(array);
+  const converter = new ArrayBufferConverter();
+  converter.load(buffer);
+  const result = converter.toString();
+  expect(JSON.parse(result)).toEqual(array);
+})
